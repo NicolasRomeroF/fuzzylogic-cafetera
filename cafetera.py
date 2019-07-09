@@ -8,17 +8,17 @@ def antecedentes():
     tazaSize = ctrl.Antecedent([0, 30, 60, 90, 120, 150, 200, 250, 300, 350, 400, 450], 'tazaSize')
     intensidad = ctrl.Antecedent(np.arange(1, 6, 1), 'intensidad')
 
-    temperatura['frio'] = fuzz.trapmf(temperatura.universe, [-10, -10, 5, 17])
+    temperatura['frio'] = fuzz.trapmf(temperatura.universe, [-10, -10, 5, 21])
     temperatura['calido'] = fuzz.trimf(temperatura.universe, [10, 20, 28])
-    temperatura['caluroso'] = fuzz.trapmf(temperatura.universe, [22, 30, 40, 40])
+    temperatura['caluroso'] = fuzz.trapmf(temperatura.universe, [19, 30, 41, 41])
 
-    tazaSize['pequeno'] = fuzz.trapmf(tazaSize.universe, [0, 0, 90, 180])
+    tazaSize['pequeno'] = fuzz.trapmf(tazaSize.universe, [0, 0, 90, 241])
     tazaSize['mediano'] = fuzz.trimf(tazaSize.universe, [125, 240, 350])
-    tazaSize['grande'] = fuzz.trapmf(tazaSize.universe, [300, 345, 450, 450])
+    tazaSize['grande'] = fuzz.trapmf(tazaSize.universe, [239, 345, 451, 451])
 
-    intensidad['suave'] = fuzz.trapmf(intensidad.universe, [1, 1, 2, 3])
+    intensidad['suave'] = fuzz.trapmf(intensidad.universe, [1, 1, 2, 4])
     intensidad['medio'] = fuzz.trimf(intensidad.universe, [2, 3, 4])
-    intensidad['fuerte'] = fuzz.trapmf(intensidad.universe, [3, 4, 5, 5])
+    intensidad['fuerte'] = fuzz.trapmf(intensidad.universe, [2, 4, 6, 6])
 
     return temperatura,tazaSize,intensidad
 
@@ -199,13 +199,74 @@ def pedirPreparacion():
 
     return tipos[preparacion - 1]
 
-'''
+def espresso(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,tiempo):
+    espresso_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],tiempo['media']))
+    espresso_rule2 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'], (agua['poca'],cafe['media'],tiempo['poca']))
+    espresso_rule3 = ctrl.Rule(temperatura['calido'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['poca'],tiempo['poca']))
+    espresso_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['media'],tiempo['poca']))
+    espresso_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['media'],tiempo['media']))
+    espresso_rule6 = ctrl.Rule(temperatura['caluroso'] & tazaSize['grande'] & intensidad['medio'], (agua['mucha'],cafe['media'],tiempo['poca']))
+
+
+    espresso_ctrl = ctrl.ControlSystem([espresso_rule1, espresso_rule2, espresso_rule3,espresso_rule4,espresso_rule5,espresso_rule6])
+
+    espresso_sim = ctrl.ControlSystemSimulation(espresso_ctrl)
+
+    espresso_sim.input['temperatura'] = temperatura_input
+    espresso_sim.input['tazaSize'] = tazaSize_input
+    espresso_sim.input['intensidad'] = intensidad_input
+
+    espresso_sim.compute()
+
+
+    print(espresso_sim.output['agua'])
+    agua.view(sim=espresso_sim)
+
+    print(espresso_sim.output['cafe'])
+    cafe.view(sim=espresso_sim)
+
+    print(espresso_sim.output['tiempo'])
+    tiempo.view(sim=espresso_sim)
+
+def capuccino(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,tiempo):
+    capuccino_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],tiempo['media']))
+    capuccino_rule2 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'], (agua['poca'],cafe['media'],tiempo['poca']))
+    capuccino_rule3 = ctrl.Rule(temperatura['calido'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['poca'],tiempo['poca']))
+    capuccino_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['media'],tiempo['poca']))
+    capuccino_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['media'],tiempo['media']))
+    capuccino_rule6 = ctrl.Rule(temperatura['caluroso'] & tazaSize['grande'] & intensidad['medio'], (agua['mucha'],cafe['media'],tiempo['poca']))
+
+
+    capuccino_ctrl = ctrl.ControlSystem([capuccino_rule1, capuccino_rule2, espresso_rule3,espresso_rule4,espresso_rule5,espresso_rule6])
+
+    capuccino_sim = ctrl.ControlSystemSimulation(espresso_ctrl)
+
+    capuccino_sim.input['temperatura'] = temperatura_input
+    capuccino_sim.input['tazaSize'] = tazaSize_input
+    capuccino_sim.input['intensidad'] = intensidad_input
+
+    capuccino_sim.compute()
+
+
+    print(espresso_sim.output['agua'])
+    agua.view(sim=espresso_sim)
+
+    print(espresso_sim.output['cafe'])
+    cafe.view(sim=espresso_sim)
+
+    print(espresso_sim.output['tiempo'])
+    tiempo.view(sim=espresso_sim)
+
+
+
+
+
+
+temperatura,tazaSize,intensidad = antecedentes()
+
 temperatura.view()
 tazaSize.view()
 intensidad.view()
-'''
-
-temperatura,tazaSize,intensidad = antecedentes()
 
 graficar_antecedentes(temperatura,tazaSize,intensidad)
 
@@ -213,54 +274,18 @@ agua,cafe,leche,chocolate,tiempo = consecuentes()
 
 graficar_consecuentes(agua,cafe,leche,chocolate,tiempo)
 
-'''
+
 agua.view()
 cafe.view()
 leche.view()
 chocolate.view()
 tiempo.view()
-'''
+
 
 temperatura_input = pedirTemperatura()
 tazaSize_input = pedirTazaSize()
 intensidad_input = pedirIntensidad()
 preparacion_input = pedirPreparacion()
 
-print(preparacion_input)
-
-
-
-
-espresso_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],tiempo['media']))
-espresso_rule2 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'], (agua['poca'],cafe['media'],tiempo['poca']))
-espresso_rule3 = ctrl.Rule(temperatura['calido'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['poca'],tiempo['poca']))
-espresso_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['media'],tiempo['poca']))
-espresso_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['media'],tiempo['media']))
-espresso_rule6 = ctrl.Rule(temperatura['caluroso'] & tazaSize['grande'] & intensidad['medio'], (agua['mucha'],cafe['media'],tiempo['poca']))
-
-
-espresso_ctrl = ctrl.ControlSystem([espresso_rule1, espresso_rule2, espresso_rule3,espresso_rule4,espresso_rule5,espresso_rule6])
-
-espresso_sim = ctrl.ControlSystemSimulation(espresso_ctrl)
-
-espresso_sim.input['temperatura'] = 18
-espresso_sim.input['tazaSize'] = 250
-espresso_sim.input['intensidad'] = 3
-
-espresso_sim.compute()
-
-
-print(espresso_sim.output['agua'])
-agua.view(sim=espresso_sim)
-
-print(espresso_sim.output['cafe'])
-cafe.view(sim=espresso_sim)
-
-print(espresso_sim.output['tiempo'])
-tiempo.view(sim=espresso_sim)
-
-
-
-
-
-
+if(preparacion_input=="espresso"):
+    espresso(temperatura_input,tazaSize_input,intensidad_input,temperatura,tazaSize,intensidad,agua,cafe,tiempo)
