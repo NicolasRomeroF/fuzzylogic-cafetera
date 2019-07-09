@@ -5,20 +5,20 @@ import matplotlib.pyplot as plt
 
 def antecedentes():
     temperatura = ctrl.Antecedent(np.arange(-10, 41, 1), 'temperatura')
-    tazaSize = ctrl.Antecedent([0, 30, 60, 90, 120, 150, 200, 250, 300, 350, 400, 450], 'tazaSize')
+    tazaSize = ctrl.Antecedent([0, 30, 60, 90, 120, 150, 200, 250, 300, 350, 400, 450, 451], 'tazaSize')
     intensidad = ctrl.Antecedent(np.arange(1, 6, 1), 'intensidad')
 
-    temperatura['frio'] = fuzz.trapmf(temperatura.universe, [-10, -10, 5, 21])
-    temperatura['calido'] = fuzz.trimf(temperatura.universe, [10, 20, 28])
-    temperatura['caluroso'] = fuzz.trapmf(temperatura.universe, [19, 30, 41, 41])
+    temperatura['frio'] = fuzz.zmf(temperatura.universe,-10, 41)
+    temperatura['calido'] = fuzz.gaussmf(temperatura.universe, 18, 10)
+    temperatura['caluroso'] = fuzz.smf(temperatura.universe, -11, 41)
 
-    tazaSize['pequeno'] = fuzz.trapmf(tazaSize.universe, [0, 0, 90, 241])
-    tazaSize['mediano'] = fuzz.trimf(tazaSize.universe, [125, 240, 350])
-    tazaSize['grande'] = fuzz.trapmf(tazaSize.universe, [239, 345, 451, 451])
+    tazaSize['pequeno'] = fuzz.zmf(tazaSize.universe, 0, 451)
+    tazaSize['mediano'] = fuzz.gaussmf(tazaSize.universe, 240, 100)
+    tazaSize['grande'] = fuzz.smf(tazaSize.universe, 0, 451)
 
-    intensidad['suave'] = fuzz.trapmf(intensidad.universe, [1, 1, 2, 4])
-    intensidad['medio'] = fuzz.trimf(intensidad.universe, [2, 3, 4])
-    intensidad['fuerte'] = fuzz.trapmf(intensidad.universe, [2, 4, 6, 6])
+    intensidad['suave'] = fuzz.zmf(intensidad.universe, 0, 5)
+    intensidad['medio'] = fuzz.gaussmf(intensidad.universe, 3, 1)
+    intensidad['fuerte'] = fuzz.smf(intensidad.universe, 0, 5)
 
     return temperatura,tazaSize,intensidad
 
@@ -61,25 +61,25 @@ def consecuentes():
     chocolate = ctrl.Consequent(np.arange(0, 15, 1), 'chocolate')
     tiempo = ctrl.Consequent(np.arange(1, 4.5, 0.5), 'tiempo')
 
-    agua['poca'] = fuzz.trapmf(agua.universe, [0, 0, 90, 250])
+    agua['poca'] = fuzz.zmf(agua.universe, 90, 300)
     agua['media'] = fuzz.trimf(agua.universe, [125, 250, 350])
-    agua['mucha'] = fuzz.trapmf(agua.universe, [250, 345, 450, 450])
+    agua['mucha'] = fuzz.smf(agua.universe, 200, 345)
 
-    cafe['poca'] = fuzz.trapmf(cafe.universe, [0, 0, 45, 75])
+    cafe['poca'] = fuzz.zmf(cafe.universe, 45, 76)
     cafe['media'] = fuzz.trimf(cafe.universe, [45, 75, 100])
-    cafe['mucha'] = fuzz.trapmf(cafe.universe, [75, 100, 150, 150])
+    cafe['mucha'] = fuzz.smf(cafe.universe, 74, 100)
 
-    leche['poca'] = fuzz.trapmf(leche.universe, [0, 0, 14, 28])
+    leche['poca'] = fuzz.zmf(leche.universe, 14, 29)
     leche['media'] = fuzz.trimf(leche.universe, [14, 28, 42])
-    leche['mucha'] = fuzz.trapmf(leche.universe, [28, 42, 57, 57])
+    leche['mucha'] = fuzz.smf(leche.universe, 27, 42)
 
-    chocolate['poca'] = fuzz.trapmf(chocolate.universe, [0, 0, 4, 7])
+    chocolate['poca'] = fuzz.zmf(chocolate.universe, 4, 8)
     chocolate['media'] = fuzz.trimf(chocolate.universe, [4, 7, 10])
-    chocolate['mucha'] = fuzz.trapmf(chocolate.universe, [7, 10, 14, 14])
+    chocolate['mucha'] = fuzz.smf(chocolate.universe, 6, 10)
 
-    tiempo['poca'] = fuzz.trapmf(tiempo.universe, [1, 1, 1.5, 2.5])
+    tiempo['poca'] = fuzz.zmf(tiempo.universe, 1.5, 3.0)
     tiempo['media'] = fuzz.trimf(tiempo.universe, [1.5, 2.5, 3.5])
-    tiempo['mucha'] = fuzz.trapmf(tiempo.universe, [2.5, 3.5, 4, 4])
+    tiempo['mucha'] = fuzz.smf(tiempo.universe, 2.0, 3.5)
 
     return agua,cafe,leche,chocolate,tiempo
 
@@ -200,16 +200,22 @@ def pedirPreparacion():
     return tipos[preparacion - 1]
 
 def espresso(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,tiempo):
-    espresso_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],tiempo['media']))
-    espresso_rule2 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'], (agua['poca'],cafe['media'],tiempo['poca']))
-    espresso_rule3 = ctrl.Rule(temperatura['calido'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['poca'],tiempo['poca']))
-    espresso_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['media'],tiempo['poca']))
-    espresso_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['media'],tiempo['media']))
-    espresso_rule6 = ctrl.Rule(temperatura['caluroso'] & tazaSize['grande'] & intensidad['medio'], (agua['mucha'],cafe['media'],tiempo['poca']))
+    espresso_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'],
+                               (agua['poca'],cafe['poca'],tiempo['media']))
+    espresso_rule2 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'],
+                               (agua['poca'],cafe['media'],tiempo['poca']))
+    espresso_rule3 = ctrl.Rule(temperatura['calido'] & tazaSize['mediano'] & intensidad['medio'],
+                               (agua['media'],cafe['poca'],tiempo['poca']))
+    espresso_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'],
+                               (agua['media'],cafe['media'],tiempo['poca']))
+    espresso_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['suave'],
+                               (agua['mucha'],cafe['media'],tiempo['media']))
+    espresso_rule6 = ctrl.Rule(temperatura['caluroso'] & tazaSize['grande'] & intensidad['medio'],
+                               (agua['mucha'],cafe['media'],tiempo['poca']))
 
-
-    espresso_ctrl = ctrl.ControlSystem([espresso_rule1, espresso_rule2, espresso_rule3,espresso_rule4,espresso_rule5,espresso_rule6])
-
+    
+    espresso_ctrl = ctrl.ControlSystem([espresso_rule1,espresso_rule2,espresso_rule3,espresso_rule4,espresso_rule5,espresso_rule6])
+    
     espresso_sim = ctrl.ControlSystemSimulation(espresso_ctrl)
 
     espresso_sim.input['temperatura'] = temperatura_input
@@ -263,10 +269,11 @@ def capuccino(temperatura_input,tazaSize_input,intensidad_input,temperatura, taz
 
 
 temperatura,tazaSize,intensidad = antecedentes()
-
+'''
 temperatura.view()
 tazaSize.view()
 intensidad.view()
+'''
 
 graficar_antecedentes(temperatura,tazaSize,intensidad)
 
@@ -274,13 +281,13 @@ agua,cafe,leche,chocolate,tiempo = consecuentes()
 
 graficar_consecuentes(agua,cafe,leche,chocolate,tiempo)
 
-
+'''
 agua.view()
 cafe.view()
 leche.view()
 chocolate.view()
 tiempo.view()
-
+'''
 
 temperatura_input = pedirTemperatura()
 tazaSize_input = pedirTazaSize()

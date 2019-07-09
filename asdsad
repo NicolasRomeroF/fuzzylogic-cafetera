@@ -1,0 +1,44 @@
+espresso_rule7 = ctrl.Rule(tazaSize['pequeno'] & temperatura['frio'] & intensidad['medio'],
+                               (agua['poca'], cafe['media'], tiempo['media']))
+    espresso_rule8 = ctrl.Rule(tazaSize['pequeno'] & temperatura['frio'] & intensidad['fuerte'],
+                               (agua['poca'], cafe['mucha'], tiempo['media']))
+    espresso_rule9 = ctrl.Rule(tazaSize['pequeno'] & temperatura['calido'] & intensidad['suave'],
+                               (agua['poca'], cafe['mucha'], tiempo['poca']))
+    espresso_rule10 = ctrl.Rule(tazaSize['pequeno'] & temperatura['calido'] & intensidad['medio'],
+                                (agua['poca'], cafe['media'], tiempo['poca']))
+    espresso_rule11 = ctrl.Rule(tazaSize['pequeno'] & temperatura['caluroso'] & intensidad['suave'],
+                                (agua['poca'], cafe['poca'], tiempo['poca']))
+    espresso_rule12 = ctrl.Rule(tazaSize['pequeno'] & temperatura['caluroso'] & intensidad['medio'],
+                                (agua['poca'], cafe['media'], tiempo['poca']))
+    espresso_rule13 = ctrl.Rule(tazaSize['pequeno'] & temperatura['caluroso'] & intensidad['fuerte'],
+                                (agua['poca'], cafe['mucha'], tiempo['poca']))
+
+    espresso_rule14 = ctrl.Rule(tazaSize['mediano'] & temperatura['frio'] & intensidad['suave'],
+                                (agua['media'], cafe['poca'], tiempo['mucha']))
+    espresso_rule15 = ctrl.Rule(tazaSize['mediano'] & temperatura['frio'] & intensidad['medio'],
+                                (agua['media'], cafe['media'], tiempo['mucha']))
+    espresso_rule16 = ctrl.Rule(tazaSize['mediano'] & temperatura['frio'] & intensidad['fuerte'],
+                                (agua['media'], cafe['mucha'], tiempo['mucha']))
+    espresso_rule17 = ctrl.Rule(tazaSize['mediano'] & temperatura['calido'] & intensidad['suave'],
+                                (agua['media'], cafe['poca'], tiempo['media']))
+    espresso_rule18 = ctrl.Rule(tazaSize['mediano'] & temperatura['calido'] & intensidad['fuerte'],
+                                (agua['media'], cafe['mucha'], tiempo['media']))
+    espresso_rule19 = ctrl.Rule(tazaSize['mediano'] & temperatura['caluroso'] & intensidad['suave'],
+                                (agua['media'], cafe['poca'], tiempo['poca']))
+    espresso_rule20 = ctrl.Rule(tazaSize['mediano'] & temperatura['caluroso'] & intensidad['medio'],
+                                (agua['media'], cafe['media'], tiempo['poca']))
+
+    espresso_rule21 = ctrl.Rule(tazaSize['grande'] & temperatura['frio'] & intensidad['fuerte'],
+                                (agua['mucha'], cafe['mucha'], tiempo['mucha']))
+    espresso_rule22 = ctrl.Rule(tazaSize['grande'] & temperatura['frio'] & intensidad['medio'],
+                                (agua['mucha'], cafe['media'], tiempo['mucha']))
+    espresso_rule23 = ctrl.Rule(tazaSize['grande'] & temperatura['calido'] & intensidad['suave'],
+                                (agua['mucha'], cafe['poca'], tiempo['poca']))
+    espresso_rule24 = ctrl.Rule(tazaSize['grande'] & temperatura['calido'] & intensidad['medio'],
+                                (agua['mucha'], cafe['media'], tiempo['poca']))
+    espresso_rule25 = ctrl.Rule(tazaSize['grande'] & temperatura['calido'] & intensidad['fuerte'],
+                                (agua['mucha'], cafe['mucha'], tiempo['media']))
+    espresso_rule26 = ctrl.Rule(tazaSize['grande'] & temperatura['caluroso'] & intensidad['suave'],
+                                (agua['mucha'], cafe['poca'], tiempo['poca']))
+    espresso_rule27 = ctrl.Rule(tazaSize['grande'] & temperatura['caluroso'] & intensidad['fuerte'],
+                                (agua['mucha'], cafe['mucha'], tiempo['poca']))
