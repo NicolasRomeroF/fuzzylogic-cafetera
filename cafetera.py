@@ -234,18 +234,18 @@ def espresso(temperatura_input,tazaSize_input,intensidad_input,temperatura, taza
     print(espresso_sim.output['tiempo'])
     tiempo.view(sim=espresso_sim)
 
-def capuccino(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,tiempo):
-    capuccino_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],tiempo['media']))
-    capuccino_rule2 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'], (agua['poca'],cafe['media'],tiempo['poca']))
-    capuccino_rule3 = ctrl.Rule(temperatura['calido'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['poca'],tiempo['poca']))
-    capuccino_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['media'],tiempo['poca']))
-    capuccino_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['media'],tiempo['media']))
-    capuccino_rule6 = ctrl.Rule(temperatura['caluroso'] & tazaSize['grande'] & intensidad['medio'], (agua['mucha'],cafe['media'],tiempo['poca']))
+def capuccino(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,leche,tiempo):
+    capuccino_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],leche['media'],tiempo['media']))
+    capuccino_rule2 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'], (agua['poca'],cafe['media'],leche['poca'],tiempo['poca']))
+    capuccino_rule3 = ctrl.Rule(temperatura['calido'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['media'],leche['media'],tiempo['media']))
+    capuccino_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['media'],leche['poca'],tiempo['poca']))
+    capuccino_rule5 = ctrl.Rule(temperatura['calido'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['poca'],leche['media'],tiempo['media']))
+    capuccino_rule6 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['fuerte'], (agua['mucha'],cafe['media'],leche['poca'],tiempo['mucha']))
 
 
-    capuccino_ctrl = ctrl.ControlSystem([capuccino_rule1, capuccino_rule2, espresso_rule3,espresso_rule4,espresso_rule5,espresso_rule6])
+    capuccino_ctrl = ctrl.ControlSystem([capuccino_rule1, capuccino_rule2, capuccino_rule3,capuccino_rule4,capuccino_rule5,capuccino_rule6])
 
-    capuccino_sim = ctrl.ControlSystemSimulation(espresso_ctrl)
+    capuccino_sim = ctrl.ControlSystemSimulation(capuccino_ctrl)
 
     capuccino_sim.input['temperatura'] = temperatura_input
     capuccino_sim.input['tazaSize'] = tazaSize_input
@@ -254,19 +254,78 @@ def capuccino(temperatura_input,tazaSize_input,intensidad_input,temperatura, taz
     capuccino_sim.compute()
 
 
-    print(espresso_sim.output['agua'])
-    agua.view(sim=espresso_sim)
+    print(capuccino_sim.output['agua'])
+    agua.view(sim=capuccino_sim)
 
-    print(espresso_sim.output['cafe'])
-    cafe.view(sim=espresso_sim)
+    print(capuccino_sim.output['cafe'])
+    cafe.view(sim=capuccino_sim)
 
-    print(espresso_sim.output['tiempo'])
-    tiempo.view(sim=espresso_sim)
+    print(capuccino_sim.output['tiempo'])
+    tiempo.view(sim=capuccino_sim)
+    print(capuccino_sim.output['leche'])
+    leche.view(sim=capuccino_sim)
+
+def latte(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,leche,tiempo):
+    latte_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],leche['media'],tiempo['media']))
+    latte_rule2 = ctrl.Rule(temperatura['caluroso'] & tazaSize['pequeno'] & intensidad['medio'], (agua['poca'],cafe['poca'],leche['poca'],tiempo['poca']))
+    latte_rule3 = ctrl.Rule(temperatura['calido'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['media'],leche['media'],tiempo['poca']))
+    latte_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['mucha'],leche['poca'],tiempo['poca']))
+    latte_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['fuerte'], (agua['mucha'],cafe['mucha'],leche['poca'],tiempo['mucha']))
+    latte_rule6 = ctrl.Rule(temperatura['calido'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['poca'],leche['mucha'],tiempo['media']))
 
 
+    latte_ctrl = ctrl.ControlSystem([latte_rule1, latte_rule2, latte_rule3,latte_rule4,latte_rule5,latte_rule6])
+
+    latte_sim = ctrl.ControlSystemSimulation(latte_ctrl)
+
+    latte_sim.input['temperatura'] = temperatura_input
+    latte_sim.input['tazaSize'] = tazaSize_input
+    latte_sim.input['intensidad'] = intensidad_input
+
+    latte_sim.compute()
 
 
+    print(latte_sim.output['agua'])
+    agua.view(sim=latte_sim)
 
+    print(latte_sim.output['cafe'])
+    cafe.view(sim=latte_sim)
+
+    print(latte_sim.output['tiempo'])
+    tiempo.view(sim=latte_sim)
+    print(latte_sim.output['leche'])
+    leche.view(sim=latte_sim)
+
+def mokaccino(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,leche,chocolate,tiempo):
+    latte_rule1 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'], (agua['poca'],cafe['media'],leche['poca'],chocolate['poca'],tiempo['poca']))
+    latte_rule2 = ctrl.Rule(temperatura['caluroso'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],leche['media'],chocolate['poca'],tiempo['poca']))
+    latte_rule3 = ctrl.Rule(temperatura['frio'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['media'],leche['media'],chocolate['poca'],tiempo['media']))
+    latte_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['media'],leche['poca'],chocolate['poca'],tiempo['poca']))
+    latte_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['fuerte'], (agua['mucha'],cafe['media'],leche['media'],chocolate['poca'],tiempo['mucha']))
+    latte_rule6 = ctrl.Rule(temperatura['calido'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['poca'],leche['media'],chocolate['poca'],tiempo['media']))
+
+
+    latte_ctrl = ctrl.ControlSystem([latte_rule1, latte_rule2, latte_rule3,latte_rule4,latte_rule5,latte_rule6])
+
+    latte_sim = ctrl.ControlSystemSimulation(latte_ctrl)
+
+    latte_sim.input['temperatura'] = temperatura_input
+    latte_sim.input['tazaSize'] = tazaSize_input
+    latte_sim.input['intensidad'] = intensidad_input
+
+    latte_sim.compute()
+
+
+    print(latte_sim.output['agua'])
+    agua.view(sim=latte_sim)
+
+    print(latte_sim.output['cafe'])
+    cafe.view(sim=latte_sim)
+
+    print(latte_sim.output['tiempo'])
+    tiempo.view(sim=latte_sim)
+    print(latte_sim.output['leche'])
+    leche.view(sim=latte_sim)
 
 temperatura,tazaSize,intensidad = antecedentes()
 '''
@@ -296,3 +355,9 @@ preparacion_input = pedirPreparacion()
 
 if(preparacion_input=="espresso"):
     espresso(temperatura_input,tazaSize_input,intensidad_input,temperatura,tazaSize,intensidad,agua,cafe,tiempo)
+elif(preparacion_input=="capuccino"):
+    capuccino(temperatura_input,tazaSize_input,intensidad_input,temperatura,tazaSize,intensidad,agua,cafe,leche,tiempo)
+elif(preparacion_input=="latte"):
+    latte(temperatura_input,tazaSize_input,intensidad_input,temperatura,tazaSize,intensidad,agua,cafe,leche,tiempo)
+elif(preparacion_input=="mokaccino"):
+    mokaccino(temperatura_input,tazaSize_input,intensidad_input,temperatura,tazaSize,intensidad,agua,cafe,leche,chocolate,tiempo)
