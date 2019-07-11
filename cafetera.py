@@ -199,6 +199,43 @@ def pedirPreparacion():
 
     return tipos[preparacion - 1]
 
+
+def aproxAgua(cantAgua):
+    ml_array=[0, 30, 60, 90, 120, 150, 200, 250, 300, 350, 400, 450]
+    i=0
+    while cantAgua > ml_array[i]:
+        i+=1
+    return ml_array[i]
+
+def aproxCafe(cantCafe):
+    cafe_array = np.arange(0, 151, 1)
+    i=0
+    while cantCafe > cafe_array[i]:
+        i+=1
+    return cafe_array[i]
+
+def aproxTiempo(cantTiempo):
+    tiempo_array=np.arange(1, 4.5, 0.5)
+    i = 0
+    while cantTiempo > tiempo_array[i]:
+        i+=1
+    return tiempo_array[i]
+
+def aproxLeche(cantLeche):
+    leche_array = np.arange(0, 58, 1)
+    i = 0
+    while cantLeche > leche_array[i]:
+        i+=1
+    return leche_array[i]
+
+def aproxChocolate(cantChocolate):
+    chocolate_array = np.arange(0, 15, 1)
+    i = 0
+    while cantChocolate > chocolate_array[i]:
+        i+=1
+    return chocolate_array[i]
+
+
 def espresso(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,tiempo):
     espresso_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'],
                                (agua['poca'],cafe['poca'],tiempo['media']))
@@ -225,14 +262,20 @@ def espresso(temperatura_input,tazaSize_input,intensidad_input,temperatura, taza
     espresso_sim.compute()
 
 
-    print(espresso_sim.output['agua'])
+    print("Cantidad de agua: ",str(aproxAgua(espresso_sim.output['agua']))," ml")
     agua.view(sim=espresso_sim)
 
-    print(espresso_sim.output['cafe'])
+    print("Cantidad de cafe: ",str(aproxCafe(espresso_sim.output['cafe']))," grs")
     cafe.view(sim=espresso_sim)
 
-    print(espresso_sim.output['tiempo'])
+    print("Tiempo: ",str(aproxTiempo(espresso_sim.output['tiempo']))," minutos")
     tiempo.view(sim=espresso_sim)
+    nombre = "Cafe_"+str(tazaSize_input)+"_espresso_"+str(intensidad_input)+"_"+str(temperatura_input)+".txt"
+    archivo = open(nombre,"w")
+    archivo.write("Nivel de agua: "+str(aproxAgua(espresso_sim.output['agua']))+" ml\n")
+    archivo.write("Cantidad de Café: "+str(aproxCafe(espresso_sim.output['cafe']))+" grs\n")
+    archivo.write("Tiempo de Preparación: "+str(aproxTiempo(espresso_sim.output['tiempo']))+" minutos\n")
+    archivo.close()
 
 def capuccino(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,leche,tiempo):
     capuccino_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],leche['media'],tiempo['media']))
@@ -254,16 +297,23 @@ def capuccino(temperatura_input,tazaSize_input,intensidad_input,temperatura, taz
     capuccino_sim.compute()
 
 
-    print(capuccino_sim.output['agua'])
+    print("Cantidad de agua: ",str(aproxAgua(capuccino_sim.output['agua']))," ml")
     agua.view(sim=capuccino_sim)
 
-    print(capuccino_sim.output['cafe'])
+    print("Cantidad de cafe: ",str(aproxCafe(capuccino_sim.output['cafe']))," grs")
     cafe.view(sim=capuccino_sim)
 
-    print(capuccino_sim.output['tiempo'])
+    print("Tiempo: ",str(aproxTiempo(capuccino_sim.output['tiempo']))," minutos")
     tiempo.view(sim=capuccino_sim)
-    print(capuccino_sim.output['leche'])
+    print("Cantidad de leche: ",str(aproxLeche(capuccino_sim.output['leche']))," grs")
     leche.view(sim=capuccino_sim)
+    nombre = "Cafe_"+str(tazaSize_input)+"_capuccino_"+str(intensidad_input)+"_"+str(temperatura_input)+".txt"
+    archivo = open(nombre,"w")
+    archivo.write("Nivel de agua: "+str(aproxAgua(capuccino_sim.output['agua']))+" ml\n")
+    archivo.write("Cantidad de Café: "+str(aproxCafe(capuccino_sim.output['cafe']))+" grs\n")
+    archivo.write("Cantidad de Leche: "+str(aproxLeche(capuccino_sim.output['leche']))+ " grs\n")
+    archivo.write("Tiempo de Preparación: "+str(aproxTiempo(capuccino_sim.output['tiempo']))+" minutos\n")
+    archivo.close()
 
 def latte(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,leche,tiempo):
     latte_rule1 = ctrl.Rule(temperatura['frio'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],leche['media'],tiempo['media']))
@@ -285,47 +335,66 @@ def latte(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSiz
     latte_sim.compute()
 
 
-    print(latte_sim.output['agua'])
+    print("Cantidad de agua: ",str(aproxAgua(latte_sim.output['agua']))," ml")
     agua.view(sim=latte_sim)
 
-    print(latte_sim.output['cafe'])
+    print("Cantidad de cafe: ",str(aproxCafe(latte_sim.output['cafe']))," grs")
     cafe.view(sim=latte_sim)
 
-    print(latte_sim.output['tiempo'])
+    print("Tiempo: ",str(aproxTiempo(latte_sim.output['tiempo']))," minutos")
     tiempo.view(sim=latte_sim)
-    print(latte_sim.output['leche'])
+    print("Cantidad de leche: ",str(aproxLeche(latte_sim.output['leche']))," grs")
     leche.view(sim=latte_sim)
+    nombre = "Cafe_"+str(tazaSize_input)+"_latte_"+str(intensidad_input)+"_"+str(temperatura_input)+".txt"
+    archivo = open(nombre,"w")
+    archivo.write("Nivel de agua: "+str(aproxAgua(latte_sim.output['agua']))+" ml\n")
+    archivo.write("Cantidad de Café: "+str(aproxCafe(latte_sim.output['cafe']))+" grs\n")
+    archivo.write("Cantidad de Leche: "+str(aproxLeche(latte_sim.output['leche']))+ " grs\n")
+    archivo.write("Tiempo de Preparación: "+str(aproxTiempo(latte_sim.output['tiempo']))+" minutos\n")
+    archivo.close()
 
 def mokaccino(temperatura_input,tazaSize_input,intensidad_input,temperatura, tazaSize, intensidad, agua,cafe,leche,chocolate,tiempo):
-    latte_rule1 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'], (agua['poca'],cafe['media'],leche['poca'],chocolate['poca'],tiempo['poca']))
-    latte_rule2 = ctrl.Rule(temperatura['caluroso'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],leche['media'],chocolate['poca'],tiempo['poca']))
-    latte_rule3 = ctrl.Rule(temperatura['frio'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['media'],leche['media'],chocolate['poca'],tiempo['media']))
-    latte_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['media'],leche['poca'],chocolate['poca'],tiempo['poca']))
-    latte_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['fuerte'], (agua['mucha'],cafe['media'],leche['media'],chocolate['poca'],tiempo['mucha']))
-    latte_rule6 = ctrl.Rule(temperatura['calido'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['poca'],leche['media'],chocolate['poca'],tiempo['media']))
+    mokaccino_rule1 = ctrl.Rule(temperatura['calido'] & tazaSize['pequeno'] & intensidad['fuerte'], (agua['poca'],cafe['media'],leche['poca'],chocolate['poca'],tiempo['poca']))
+    mokaccino_rule2 = ctrl.Rule(temperatura['caluroso'] & tazaSize['pequeno'] & intensidad['suave'], (agua['poca'],cafe['poca'],leche['media'],chocolate['poca'],tiempo['poca']))
+    mokaccino_rule3 = ctrl.Rule(temperatura['frio'] & tazaSize['mediano'] & intensidad['medio'], (agua['media'],cafe['media'],leche['media'],chocolate['poca'],tiempo['media']))
+    mokaccino_rule4 = ctrl.Rule(temperatura['caluroso'] & tazaSize['mediano'] & intensidad['fuerte'], (agua['media'],cafe['media'],leche['poca'],chocolate['poca'],tiempo['poca']))
+    mokaccino_rule5 = ctrl.Rule(temperatura['frio'] & tazaSize['grande'] & intensidad['fuerte'], (agua['mucha'],cafe['media'],leche['media'],chocolate['poca'],tiempo['mucha']))
+    mokaccino_rule6 = ctrl.Rule(temperatura['calido'] & tazaSize['grande'] & intensidad['suave'], (agua['mucha'],cafe['poca'],leche['media'],chocolate['poca'],tiempo['media']))
 
 
-    latte_ctrl = ctrl.ControlSystem([latte_rule1, latte_rule2, latte_rule3,latte_rule4,latte_rule5,latte_rule6])
+    mokaccino_ctrl = ctrl.ControlSystem([mokaccino_rule1, mokaccino_rule2, mokaccino_rule3,mokaccino_rule4,mokaccino_rule5,mokaccino_rule6])
 
-    latte_sim = ctrl.ControlSystemSimulation(latte_ctrl)
+    mokaccino_sim = ctrl.ControlSystemSimulation(mokaccino_ctrl)
 
-    latte_sim.input['temperatura'] = temperatura_input
-    latte_sim.input['tazaSize'] = tazaSize_input
-    latte_sim.input['intensidad'] = intensidad_input
+    mokaccino_sim.input['temperatura'] = temperatura_input
+    mokaccino_sim.input['tazaSize'] = tazaSize_input
+    mokaccino_sim.input['intensidad'] = intensidad_input
 
-    latte_sim.compute()
+    mokaccino_sim.compute()
 
 
-    print(latte_sim.output['agua'])
-    agua.view(sim=latte_sim)
+    print("Cantidad de agua: ",str(aproxAgua(mokaccino_sim.output['agua']))," ml")
+    agua.view(sim=mokaccino_sim)
 
-    print(latte_sim.output['cafe'])
-    cafe.view(sim=latte_sim)
+    print("Cantidad de cafe: ",str(aproxCafe(mokaccino_sim.output['cafe'])), " grs")
+    cafe.view(sim=mokaccino_sim)
 
-    print(latte_sim.output['tiempo'])
-    tiempo.view(sim=latte_sim)
-    print(latte_sim.output['leche'])
-    leche.view(sim=latte_sim)
+    print("Tiempo: ",str(aproxTiempo(mokaccino_sim.output['tiempo'])), " minutos")
+    tiempo.view(sim=mokaccino_sim)
+    print("Cantidad de leche: ",str(aproxLeche(mokaccino_sim.output['leche'])), " grs")
+    leche.view(sim=mokaccino_sim)
+
+    print("Cantidad de chocolate: ",str(aproxChocolate(mokaccino_sim.output['chocolate'])), " grs")
+    chocolate.view(sim=mokaccino_sim)
+
+    nombre = "Cafe_"+str(tazaSize_input)+"_mokaccino_"+str(intensidad_input)+"_"+str(temperatura_input)+".txt"
+    archivo = open(nombre,"w")
+    archivo.write("Nivel de agua: "+str(aproxAgua(mokaccino_sim.output['agua']))+" ml\n")
+    archivo.write("Cantidad de Café: "+str(aproxCafe(mokaccino_sim.output['cafe']))+" grs\n")
+    archivo.write("Cantidad de Leche: "+str(aproxLeche(mokaccino_sim.output['leche']))+ " grs\n")
+    archivo.write("Cantidad de Chocolate: "+str(aproxChocolate(mokaccino_sim.output['chocolate']))+ " grs\n")
+    archivo.write("Tiempo de Preparación: "+str(aproxTiempo(mokaccino_sim.output['tiempo']))+" minutos\n")
+    archivo.close()
 
 temperatura,tazaSize,intensidad = antecedentes()
 '''
